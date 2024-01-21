@@ -30,8 +30,6 @@ def index(request):
         content += f"Order date: {order.date_ordered.date()}<br>Customer: {order.customer}<br>Products:<br>{prod_list}<br>Total:\t{order.total_price}<br>"
         content += "<br>"
 
-        # .join([str(order) for order in orders])
-
     return HttpResponse(content)
 
 
@@ -64,7 +62,6 @@ def userorders_product_list(request, client_id, period=None):
     else:
         orders = Order.objects.filter(customer=cust)
 
-    # prod_set = set([order.products.all() for order in orders])
     prod_set = {prod for order in orders for prod in order.products.all()}
 
     context = {
@@ -84,8 +81,6 @@ def users(request):
     for user in users:
         content += f"{user}<br>"
 
-        # .join([str(order) for order in users])
-
     return HttpResponse(content)
 
 
@@ -98,6 +93,5 @@ def products(request):
     for product in products:
         content += f"{product.name} : {product.price} : {product.quantity} : {product.add_date}<br> {product.description}<br>"
         content += "<br>"
-        # .join([str(order) for order in products])
 
     return HttpResponse(content)
