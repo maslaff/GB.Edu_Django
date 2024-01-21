@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "appo",
+    "app2",
+    "app2_hw",
 ]
 
 MIDDLEWARE = [
@@ -146,7 +148,7 @@ LOGGING = {
         },
         "file": {
             "class": "logging.FileHandler",
-            "filename": "logs/django.log",
+            "filename": BASE_DIR.parent / "logs/django.log",
             "formatter": "verbose",
         },
     },
