@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ user.name }} {% endblock title %}
+
+{% block style %}
+td {
+{# padding: 5px; #}
+vertical-align: top;
+}
+{% endblock style %}
+
+{% block body %}
+<H2>Products of all orders for user: {{ user.name }}</H2>
+<table border="" style="width: 50%; border-collapse: collapse;">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+        <td>{{ product.name}}</td>
+        <td>{{ product.description }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock body %}

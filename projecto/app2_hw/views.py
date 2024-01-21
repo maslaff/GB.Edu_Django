@@ -1,7 +1,7 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseNotFound
 import logging
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from app2_hw.models import Order, User, Product
 
@@ -33,6 +33,46 @@ def index(request):
         # .join([str(order) for order in orders])
 
     return HttpResponse(content)
+
+
+def orders_list(request, client_id):
+    log.info(f"Orders list requested: {request}")
+
+    cust = get_object_or_404(User, pk=client_id)
+
+    orders = Order.objects.filter(customer=cust)
+    context = {
+        "user": cust,
+        "orders": [
+            {"order": order, "products": order.products.all()} for order in orders
+        ],
+    }
+
+    return render(request, "app2_hw/orders.html", context)
+
+
+def userorders_product_list(request, client_id, period=None):
+    log.info(f"userorders_product_list requested: {request}")
+
+    cust = get_object_or_404(User, pk=client_id)
+    if period:
+        periods = {"week": 7, "month": 30, "year": 365}
+        if period not in periods:
+            return HttpResponseNotFound("Not this period. Only year, month or week")
+        from_date = datetime.today() - timedelta(days=periods[period])
+        orders = Order.objects.filter(customer=cust, date_ordered__gt=from_date)
+    else:
+        orders = Order.objects.filter(customer=cust)
+
+    # prod_set = set([order.products.all() for order in orders])
+    prod_set = {prod for order in orders for prod in order.products.all()}
+
+    context = {
+        "user": cust,
+        "products": prod_set,
+    }
+
+    return render(request, "app2_hw/uord_prods.html", context)
 
 
 def users(request):

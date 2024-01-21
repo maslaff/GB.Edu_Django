@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "appo",
     "app2",
     "app2_hw",
+    "app3",
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ ROOT_URLCONF = "projecto.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates/"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

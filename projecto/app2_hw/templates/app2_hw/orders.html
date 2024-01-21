@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ user.name }} {% endblock title %}
+
+{% block style %}
+td {
+{# padding: 5px; #}
+vertical-align: top;
+}
+{% endblock style %}
+
+{% block body %}
+<H2>Orders of user {{ user.name }}</H2>
+<table border="" style="width: 50%; border-collapse: collapse;">
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Total price</th>
+        <th>Product list</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.order.pk }}</td>
+        <td>{{ order.order.date_ordered }}</td>
+        <td>{{ order.order.total_price }}</td>
+        <td>
+            <table style="width: 100%;">
+                {% for prod in order.products %}
+                <tr>
+                    <td>-</td>
+                    <td>{{ prod.name }}</td>
+                    <td>{{ prod.price }}</td>
+                    <td>{{ prod.description }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock body %}
