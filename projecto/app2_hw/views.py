@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound
+from django.core.files.storage import FileSystemStorage
 import logging
 from datetime import date, datetime, timedelta
 
 from app2_hw.models import Order, User, Product
+from app2_hw.forms import ProductForm
 
 log = logging.getLogger(__name__)
 
@@ -95,3 +97,46 @@ def products(request):
         content += "<br>"
 
     return HttpResponse(content)
+
+
+def product_form(request, product_id):
+    product = Product.objects.filter(pk=product_id).first()
+    message = "Продукт"
+    if request.method == "POST":
+        message = "Продукт изменен"
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+            name = form.cleaned_data["name"]
+            description = form.cleaned_data["description"]
+            price = form.cleaned_data["price"]
+            quantity = form.cleaned_data["quantity"]
+            img = form.cleaned_data["img"]
+            fs = FileSystemStorage()
+            fs.save(img.name, img)
+            product.image = img
+            product.name = name
+            product.description = description
+            product.price = price
+            product.quantity = quantity
+            product.save()
+    else:
+        form = ProductForm(
+            initial={
+                "name": product.name,
+                "description": product.description,
+                "price": product.price,
+                "quantity": product.quantity,
+                "image_name": product.image,
+            }
+        )
+        message = "Редактирование продукта"
+    return render(
+        request,
+        "app2_hw/product_edit.html",
+        {
+            "form": form,
+            "message": message,
+            "prod_img": product.image,
+        },
+    )

@@ -17,4 +17,5 @@ urlpatterns = [
         views.userorders_product_list,
         name="userorders_product_list",
     ),
+    path("product/<int:product_id>", views.product_form, name="product_edit"),
 ]
