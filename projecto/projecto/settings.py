@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,14 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-pmt2s!vc-_^=@37bxpq4hwy(@g951_^24p6w^9p%9o-sqwv8af"
+SECRET_KEY = os.getenv("JANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
-    "192.168.225.204",
+    "maslaff.pythonanywhere.com",
 ]
 
 
@@ -74,6 +78,8 @@ TEMPLATES = [
     },
 ]
 
+STATIC_ROOT = BASE_DIR / "static/"
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -85,8 +91,15 @@ WSGI_APPLICATION = "projecto.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "maslaff$default",
+        "USER": "maslaff",
+        "PASSWORD": os.getenv("JANGO_MYSQL_PWD"),
+        "HOST": "maslaff.mysql.pythonanywhere-services.com",
+        "OPTIONS": {
+            "init_comand": "SET NAMES 'utf8mb4';SET sql_mode='STRICT_TRANS_TABLES'",
+            "charset": "utf8mb4",
+        },
     }
 }
 
